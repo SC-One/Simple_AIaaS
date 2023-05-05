@@ -16,22 +16,36 @@ find_package(Threads REQUIRED)
 include(common.cmake) # copied from grpc examples :D , I tested generating from cmake ,gprc has problem.
 
 set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(PROTOS
     ${CMAKE_CURRENT_SOURCE_DIR}/../protos/image.proto
 )
 
-file(GLOB_RECURSE proto_out_files
-    ${INC_DIR}/proto_out/*.hpp
-    ${INC_DIR}/proto_out/*.h
+file(GLOB_RECURSE proto_out_srcs
     ${INC_DIR}/proto_out/*.cpp
     ${INC_DIR}/proto_out/*.cc
+)
+
+file(GLOB_RECURSE HEADER_FILES
+    ${INC_DIR}/*.hpp
+    ${INC_DIR}/*.hxx
+    ${INC_DIR}/*.h
+)
+
+file(GLOB_RECURSE SOURCE_FILES
+    ${SRC_DIR}/*.cpp
+    ${SRC_DIR}/*.cxx
+    ${SRC_DIR}/*.cc
+    ${SRC_DIR}/*.c
+    ${proto_out_srcs}
 )
 
 include_directories(${INC_DIR})
 
 add_executable(${ROOT_PROJECT_NAME}
   main.cpp
-  ${proto_out_files}
+  ${HEADER_FILES}
+  ${SOURCE_FILES}
 )
 
 target_link_libraries(${ROOT_PROJECT_NAME}
