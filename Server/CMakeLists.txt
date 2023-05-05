@@ -17,6 +17,10 @@ include(common.cmake) # copied from grpc examples :D , I tested generating from 
 
 set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(THIRD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty)
+set(DARKNET_DIR ${THIRD_DIR}/darknet)
+#add_compile_definitions(DARKNET_ROOT_DIRECTORY=${DARKNET_DIR})
+
 set(PROTOS
     ${CMAKE_CURRENT_SOURCE_DIR}/../protos/image.proto
 )
@@ -40,7 +44,10 @@ file(GLOB_RECURSE SOURCE_FILES
     ${proto_out_srcs}
 )
 
-include_directories(${INC_DIR})
+include_directories(
+    ${INC_DIR}
+    ${DARKNET_DIR}/include/
+)
 
 add_executable(${ROOT_PROJECT_NAME}
   main.cpp

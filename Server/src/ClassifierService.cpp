@@ -9,6 +9,7 @@ grpc::Status ClassifierServiceImpl::classify(
     while (stream->Read(&request)) {
         // Process the incoming request
         // ...
+        auto x = request.data();
 
         // Send a response back to the client
         image::Image response;
