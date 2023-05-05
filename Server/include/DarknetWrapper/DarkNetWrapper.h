@@ -17,6 +17,15 @@ class DarknetWrapper {
         int c;
     };
 
+    struct DetectionArea {
+        int x, y, w, h;
+    };
+    struct SimpleDetectionInfo {
+        DetectionArea area;
+        std::string label;
+        int possibility;
+    };
+
     image makeImageFromRawData(ImageInfo info, const char *&imageData) {
         image result = make_image(info.w, info.h, info.c);
         memcpy(result.data, imageData,
@@ -46,8 +55,8 @@ class DarknetWrapper {
         free_ptrs((void **)names, net->layers[net->n - 1].classes);
     }
 
-    std::vector<std::string> detect(ImageInfo info,
-                                    const std::string &imageData) {
+    std::vector<SimpleDetectionInfo> detect(ImageInfo info,
+                                            const std::string &imageData) {
         // Run object detection on the specified image data
         image im = makeImageFromRawData(info, imageData);
         float *predictions = network_predict(net, im.data);
@@ -55,12 +64,17 @@ class DarknetWrapper {
         detection *dets = get_network_boxes(net, im.w, im.h, thresh,
                                             hier_thresh, 0, 1, &nboxes);
         do_nms_sort(dets, nboxes, net->layers[net->n - 1].classes, nms);
-        std::vector<std::string> result;
+        std::vector<SimpleDetectionInfo> result(nboxes, SimpleDetectionInfo{});
         for (int i = 0; i < nboxes; ++i) {
-            char label[256];
             int cls = max_index(dets[i].prob, net->layers[net->n - 1].classes);
-            sprintf(label, "%s: %.2f", names[cls], dets[i].prob[cls]);
-            result.push_back(label);
+            result[i].label = names[cls];
+            result[i].possibility = dets[i].prob[cls];
+            {
+                result[i].area.x = dets[i].bbox.x;
+                result[i].area.y = dets[i].bbox.y;
+                result[i].area.w = dets[i].bbox.w;
+                result[i].area.h = dets[i].bbox.h;
+            }
         }
         free_detections(dets, nboxes);
         free_image(im);
