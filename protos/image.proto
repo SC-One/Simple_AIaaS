@@ -1,0 +1,11 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.images";
+option java_outer_classname = "ImagesProto";
+option objc_class_prefix = "IMG";
+
+package image;
+
+message Image {
+  bytes data = 1;
+}

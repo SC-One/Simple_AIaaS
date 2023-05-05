@@ -55,3 +55,6 @@ compile_commands.json
 
 *.txt.user*
 *.pro.user*
+include/proto_out/*
+
+
