@@ -20,8 +20,8 @@ class Server final {
 
    private:
     QScopedPointer<ClassifierServiceImpl> _service_impl;
-    grpc::ServerBuilder _builder;
     QScopedPointer<grpc::Server> _server;
+    grpc::ServerBuilder _builder;
 };
 
 }  // namespace DarkNetServer
