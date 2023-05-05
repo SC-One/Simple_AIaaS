@@ -1,11 +1,17 @@
 syntax = "proto3";
 option java_multiple_files = true;
-option java_package = "io.grpc.examples.images";
-option java_outer_classname = "ImagesProto";
+option java_package = "io.uni.qods.image";
+option java_outer_classname = "ImageProto";
 option objc_class_prefix = "IMG";
 
 package image;
 
+service ClassifierService {
+  rpc classify (stream Image) returns (stream Image) {}
+}
+
 message Image {
   bytes data = 1;
 }
+
+

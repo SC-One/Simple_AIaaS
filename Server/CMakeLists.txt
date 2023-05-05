@@ -10,8 +10,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui)
 find_package(Threads REQUIRED)
 include(common.cmake) # copied from grpc examples :D , I tested generating from cmake ,gprc has problem.
 
@@ -50,6 +50,7 @@ add_executable(${ROOT_PROJECT_NAME}
 
 target_link_libraries(${ROOT_PROJECT_NAME}
     Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Gui
     Threads::Threads
     gRPC::grpc++
 )
