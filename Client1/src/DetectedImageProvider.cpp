@@ -7,6 +7,7 @@ QImage DetectedImageProvider::requestImage(const QString &id, QSize *size,
                                            const QSize &requestedSize) {
     // Look up the image in your model based on the ID
     // and return the corresponding QImage.
+    return QImage();
 }
 
 QStandardItemModel *DetectedImageProvider::model() const { return _model; }
