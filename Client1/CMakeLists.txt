@@ -14,17 +14,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools)
 
-#if(DEFINED ENV{VCPKG_ROOT})
-#    set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-#else()
-#    set(CMAKE_TOOLCHAIN_FILE "C:/Users/SC/Documents/tmp/vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake")
-#endif()
-#find_package(gRPC CONFIG REQUIRED)
 
+# If you installed grpc with vcpkg
+# please use below command and involve output explaination
+# vcpkg integrate install
+find_package(gRPC CONFIG REQUIRED)
 set(TS_FILES Client1_fa_IR.ts)
 
 set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+file(GLOB_RECURSE proto_out_srcs
+    ${INC_DIR}/proto_out/*.cpp
+    ${INC_DIR}/proto_out/*.cc
+)
 
 file(GLOB_RECURSE proto_out_srcs
   ${INC_DIR}/proto_out/*.cpp
@@ -66,7 +69,7 @@ target_link_libraries(Client1
   PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Quick
-#  gRPC::grpc gRPC::grpc++
+  gRPC::grpc gRPC::grpc++
 )
 
 
