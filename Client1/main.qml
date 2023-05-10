@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 import QtQuick.VirtualKeyboard 2.0
 import AIaaS.Simple.Client 1.0
+import QtQuick.Controls 1.4
 
 Window {
     id: window
@@ -9,14 +10,24 @@ Window {
     height: 480
     visible: true
     title: qsTr("Client1")
-    Controller {
-        id: mainController
+
+    TabView {
+        anchors.fill: parent;
+        Tab {
+            title: "Camera"
+            CameraHandler {
+                anchors.fill: parent
+                backend: mainController
+            }
+        }
+        Tab {
+            title: "DetectedImages"
+            ReceivedImages {
+                anchors.fill: parent
+            }
+        }
     }
 
-    CameraHandler {
-        anchors.fill: parent
-        backend: mainController
-    }
 
     InputPanel {
         id: inputPanel

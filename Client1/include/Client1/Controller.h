@@ -4,9 +4,21 @@
 #include <QObject>
 #include <QImage>
 #include <QQmlEngine>
+#include <QByteArray>
 
 class Controller : public QObject {
     Q_OBJECT
+    struct BoundingBox {
+        struct Area {
+            int x, y;
+            int width, height;
+        };
+
+        QString label;
+        qreal possibility;
+        Area area;
+    };
+
    public:
     explicit Controller(QObject *parent = nullptr);
 
@@ -16,6 +28,7 @@ class Controller : public QObject {
 
    signals:
     void imageCaptured(QImage image);
+    void imageFromGRPC(const QByteArray &imageData, BoundingBox label);
 
    private slots:
     void onImageCaptured(QImage const &image);

@@ -134,4 +134,4 @@ compile_commands.json
 *.pro.user*
 include/proto_out/*
 
-Client*.ts
+#Client*.ts

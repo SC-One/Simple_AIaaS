@@ -4,6 +4,11 @@
 #include <QLocale>
 #include <QTranslator>
 #include <Client1/Controller.h>
+#include <Client1/DetectedImageProvider.h>
+#include <QScopedPointer>
+#include <QQmlContext>
+
+static QScopedPointer<QStandardItemModel> imageModel(new QStandardItemModel());
 
 int main(int argc, char *argv[]) {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
@@ -28,6 +33,26 @@ int main(int argc, char *argv[]) {
     }
 
     QQmlApplicationEngine engine;
+    Controller mainController;
+
+    ///@@@on recieving image model we should insert it in model
+    QImage image;
+    QString id;
+    QStandardItem *item = new QStandardItem();
+    item->setData(image, Qt::DecorationRole);  //
+    item->setData(id, Qt::UserRole);
+    imageModel->appendRow(item);
+    ///!!!!!!!!!!!!!!!!!!
+
+    engine.rootContext()->setContextProperty("mainController", &mainController);
+    {
+        DetectedImageProvider imageProvider;
+        imageProvider.setModel(imageModel.get());
+        engine.addImageProvider("myImageProvider", &imageProvider);
+        engine.rootContext()->setContextProperty("detectedImagesModel",
+                                                 imageModel.get());
+    }
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,
