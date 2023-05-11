@@ -7,6 +7,7 @@
 #include <Client1/DetectedImageProvider.h>
 #include <QScopedPointer>
 #include <QQmlContext>
+#include <Client1/ClassifierClient.h>
 
 static QScopedPointer<QStandardItemModel> imageModel(new QStandardItemModel());
 
@@ -46,6 +47,12 @@ int main(int argc, char *argv[]) {
 
     engine.rootContext()->setContextProperty("mainController", &mainController);
     {
+        {
+            // Network
+
+            ClassifierClient client(grpc::CreateChannel(
+                "localhost:50051", grpc::InsecureChannelCredentials()));
+        }
         DetectedImageProvider imageProvider;
         imageProvider.setModel(imageModel.get());
         engine.addImageProvider("myImageProvider", &imageProvider);

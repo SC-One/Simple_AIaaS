@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17 )
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools)
@@ -18,7 +18,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools)
 # If you installed grpc with vcpkg
 # please use below command and involve output explaination
 # vcpkg integrate install
-find_package(gRPC CONFIG REQUIRED)
+#find_package(gRPC CONFIG REQUIRED)
+include(common.cmake)
 set(TS_FILES Client1_fa_IR.ts)
 
 set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)

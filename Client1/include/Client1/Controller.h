@@ -6,19 +6,10 @@
 #include <QQmlEngine>
 #include <QByteArray>
 
+#include <Client1/Structures.h>
+
 class Controller : public QObject {
     Q_OBJECT
-    struct BoundingBox {
-        struct Area {
-            int x, y;
-            int width, height;
-        };
-
-        QString label;
-        qreal possibility;
-        Area area;
-    };
-
    public:
     explicit Controller(QObject *parent = nullptr);
 

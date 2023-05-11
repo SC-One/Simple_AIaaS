@@ -19,8 +19,8 @@ Rectangle {
         captureMode: Camera.CaptureStillImage
         imageCapture {
             onImageCaptured: {
-                if(undefined === rootItem.back)
-                    return;
+                if (undefined === rootItem.back)
+                    return
                 var image = preview.image
                 var bytes = image.bits()
                 var size = image.byteCount()
@@ -40,9 +40,13 @@ Rectangle {
         id: captureButton
         text: "Capture and Send to AIaaS"
         onClicked: {
-            camera.imageCapture.capture()
+            try {
+                camera.imageCapture.capture()
+            } catch (e) {
+                console.log("EEEEEEE: ", e)
+            }
         }
-        y :parent.height*0.95 - height
+        y: parent.height * 0.95 - height
         anchors.horizontalCenter: parent.horizontalCenter
     }
 }
