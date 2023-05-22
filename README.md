@@ -2,6 +2,7 @@
 Simple Example of Artificial Intelligence as a Service (Uni Presentation)
 
 ### AWS vs GCP vs MA
+
 I just accumulated some informations , that may not be with high accuracy , but its not bad point to start.
 for more information , please go in Presentation directory and check slides.
 
@@ -37,3 +38,38 @@ for more information , please go in Presentation directory and check slides.
     <td>- Highest paying IT certification<br>- Strong integration with Google's technologies<br>- Powerful integration with Kubernetes</td>
   </tr>
 </table>
+
+
+## Deep explain
+
+### AWS:
+
+<b>Pros:</b>
+  - Leading Cloud Innovator: AWS is at the forefront of cloud technology advancements.
+  - Broad Global Presence: AWS has data centers located worldwide, allowing for global reach and low-latency services.
+  - Mature and Feature-riched Cloud Technologies: AWS offers a wide range of mature and advanced cloud services.
+  - Good Documentations Of Services: AWS provides comprehensive documentation for its services, making it easier to understand and use them.
+  - Extensive Training Materials: There are many learning resources available, such as blogs, eBooks, and video tutorials, to help you learn AWS.
+<b>Cons:</b>
+  - Complex Billing System: The billing system of AWS can be complicated to understand and manage.
+
+### Microsoft Azure:
+
+<b>Pros:</b>
+  - Offers a familiar environment to native Microsoft users: If you're already familiar with Microsoft products, Azure provides a seamless integration experience.
+  - Ease of integration with other Microsoft products: Azure integrates well with other Microsoft services, making it convenient for users of Microsoft technologies.
+  - Hybrid cloud: Azure supports hybrid cloud deployments, allowing for a combination of on-premises and cloud infrastructure.
+<b>Cons:</b>
+  - Costly pricing models: Azure's pricing can be expensive, depending on the services and usage.
+  - Complicated interface: The interface of Azure can be complex and may require some time to get familiar with.
+  - Poor documentations of services: The documentation for some Azure services may be lacking in detail or clarity.
+
+### GCP (Google Cloud Platform):
+
+<b>Pros:</b>
+  - Live Migration Of Virtual Machines: GCP offers live migration capabilities, allowing for seamless transitions during maintenance or upgrades.
+  - Cheap Pricing Model: GCP provides competitive pricing options for its services.
+  - Broad Toolset for Artificial Intelligence and Machine Learning: GCP offers a wide range of tools and services for AI and ML applications.
+<b>Cons:</b>
+  - Limited Product Range: Compared to other cloud platforms, GCP may have a narrower selection of available services.
+  - Smaller Global Presence Compared To Other Cloud Platforms: GCP's data center presence may be more limited in certain regions compared to other providers.
