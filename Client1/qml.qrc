@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>CameraHandler.qml</file>
+        <file>ReceivedImages.qml</file>
+        <file>FullImage.qml</file>
+    </qresource>
+</RCC>

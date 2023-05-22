@@ -1,0 +1,35 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "io.uni.qods.image";
+option java_outer_classname = "ImageProto";
+option objc_class_prefix = "IMG";
+
+package sc.image;
+
+service ClassifierService {
+  rpc classifyshot (Image) returns (Detections) {}
+}
+
+message Image {
+  bytes data = 1;
+  int32 width = 2;
+  int32 height = 3;
+  int32 channels = 4;
+}
+
+message Area {
+  int32 x = 5;
+  int32 y = 6;
+  int32 w = 7;
+  int32 h = 8;
+}
+
+message DetectedImage {
+	Area area = 9;
+	string label = 10;
+  int32  possibility = 11;
+}
+
+message Detections {
+	repeated DetectedImage detections = 12;
+}
