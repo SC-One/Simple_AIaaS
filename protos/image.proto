@@ -8,6 +8,7 @@ package sc.image;
 
 service ClassifierService {
   rpc classifyshot (Image) returns (Detections) {}
+  rpc drawClassifiedImage (Image) returns (Image) {}
 }
 
 message Image {

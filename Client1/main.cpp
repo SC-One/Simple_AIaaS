@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QSharedPointer>
 
 #include <QLocale>
 #include <QTranslator>
@@ -9,14 +10,14 @@
 #include <QQmlContext>
 #include <Client1/ClassifierClient.h>
 
-static QScopedPointer<QStandardItemModel> imageModel(new QStandardItemModel());
-
 int main(int argc, char *argv[]) {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+    QCoreApplication::setOrganizationName("SC-One");
+    QCoreApplication::setApplicationName("Simple_AIaaS");
     QGuiApplication app(argc, argv);
 
     {
@@ -36,28 +37,24 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
     Controller mainController;
 
-    ///@@@on recieving image model we should insert it in model
-    QImage image;
-    QString id;
-    QStandardItem *item = new QStandardItem();
-    item->setData(image, Qt::DecorationRole);  //
-    item->setData(id, Qt::UserRole);
-    imageModel->appendRow(item);
-    ///!!!!!!!!!!!!!!!!!!
-
+    engine.rootContext()->setContextProperty("detectedImagesModel", 0);
     engine.rootContext()->setContextProperty("mainController", &mainController);
+    QSharedPointer<ClassifierClient> client(
+        new ClassifierClient(grpc::CreateChannel(
+            "localhost:50777", grpc::InsecureChannelCredentials())));
+    DetectedImageProvider imageProvider;
     {
-        {
-            // Network
+        mainController.setNetwork(client);
 
-            ClassifierClient client(grpc::CreateChannel(
-                "localhost:50051", grpc::InsecureChannelCredentials()));
-        }
-        DetectedImageProvider imageProvider;
-        imageProvider.setModel(imageModel.get());
         engine.addImageProvider("myImageProvider", &imageProvider);
-        engine.rootContext()->setContextProperty("detectedImagesModel",
-                                                 imageModel.get());
+        QObject::connect(&mainController, &Controller::drawedImageFromGRPC,
+                         &mainController, [&](QImage const &image) {
+                             static int i = -1;
+                             ++i;
+                             imageProvider.setNewImage(i, image);
+                             engine.rootContext()->setContextProperty(
+                                 "detectedImagesModel", i + 1);
+                         });
     }
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

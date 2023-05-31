@@ -1,6 +1,9 @@
 #include <Client1/ClassifierClient.h>
 #include <thread>
 #include <QImage>
+#include <QDebug>
+#include <QBuffer>
+#include <QByteArray>
 
 ClassifierClient::ClassifierClient(std::shared_ptr<Channel> channel,
                                    QObject* parent)
@@ -8,57 +11,55 @@ ClassifierClient::ClassifierClient(std::shared_ptr<Channel> channel,
     _t1 = std::thread(&ClassifierClient::AsyncCompleteRpc, this);
 }
 
-ClassifierClient::~ClassifierClient() { _t1.join(); }
+ClassifierClient::~ClassifierClient() {
+    _shuttingDown = true;
+    cq_.Shutdown();
+    _t1.join();
+}
 
 void ClassifierClient::Classify(const QImage& imageData) {
     _tmp = imageData;
     Image image;
     // Fill in the image metadata here
-    std::vector<char> x;
-    image.set_data(x.data(), x.size());
+    image.set_width(imageData.width());
+    image.set_height(imageData.height());
+    image.set_channels(imageData.depth() / 8);
+
+    QByteArray imageDataArray;
+    QBuffer buffer(&imageDataArray);
+    buffer.open(QIODevice::WriteOnly);
+    imageData.save(&buffer, "JPG");
+
+    image.set_data(imageDataArray.constData(), imageDataArray.size());
+
+    //    auto x = QImage::fromData(imageDataArray);
+    //    qDebug() << x.isNull();
+
     // ...
     AsyncClientCall* call = new AsyncClientCall;
 
     call->response_reader =
-        stub_->PrepareAsyncclassifyshot(&call->context, image, &cq_);
+        stub_->PrepareAsyncdrawClassifiedImage(&call->context, image, &cq_);
     call->response_reader->StartCall();
-    call->response_reader->Finish(&call->detections, &call->status,
-                                  (void*)call);
+    call->response_reader->Finish(&call->drawed, &call->status, (void*)call);
 }
 
 void ClassifierClient::AsyncCompleteRpc() {
     void* got_tag;
     bool ok = false;
-    while (cq_.Next(&got_tag, &ok)) {
+    while (cq_.Next(&got_tag, &ok) && !_shuttingDown) {
         AsyncClientCall* call = static_cast<AsyncClientCall*>(got_tag);
         if (call->status.ok()) {
             // Process the received detected image here
             QImage response;
-            //             the replay: call->detections;
-            //            response.fromData();
-            int maxPosIndex = -1;
-            int maxPos = -1;
-            for (std::size_t i = 0; i < call->detections.detections_size();
-                 ++i) {
-                auto detect = call->detections.detections(i);
-                if (detect.possibility() > maxPos) {
-                    maxPos = detect.possibility();
-                    maxPosIndex = i;
-                }
-            }
-
-            auto const bestDetect = call->detections.detections(maxPosIndex);
-            BoundingBox box;
-            box.area.x = bestDetect.area().x();
-            box.area.x = bestDetect.area().y();
-            box.area.width = bestDetect.area().w();
-            box.area.height = bestDetect.area().h();
-            box.label = QString::fromStdString(bestDetect.label());
-            box.possibility = bestDetect.possibility();
-            emit newImageRecieved(_tmp, box);
+            auto const bits = call->drawed.data();
+            response.loadFromData(reinterpret_cast<const uchar*>(bits.data()),
+                                  bits.size(), "JPG");
+            emit newDrawedImageReceived(response);
             // ...
         } else {
-            std::cout << "RPC failed" << std::endl;
+            std::cout << "RPC failed " << call->status.error_details()
+                      << call->status.error_message() << std::endl;
         }
         delete call;
     }

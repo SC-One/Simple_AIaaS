@@ -1,4 +1,5 @@
 #include <Server/ClassifierService.h>
+#include <QBuffer>
 
 namespace DarkNetServer {
 using Detections = std::vector<DarknetWrapper::SimpleDetectionInfo>;
@@ -7,9 +8,6 @@ grpc::Status ClassifierServiceImpl::classifyshot(
     grpc::ServerContext *context, const sc::image::Image *request,
     sc::image::Detections *response) {
     {
-        // Process the incoming request
-        // ...
-
         Detections tmpResult = _network.detect(
             {request->width(), request->height(), request->channels()},
             request->data());
@@ -27,6 +25,21 @@ grpc::Status ClassifierServiceImpl::classifyshot(
                 detected->set_allocated_area(tmp);
             }
         }
+    }
+    return grpc::Status::OK;
+}
+
+grpc::Status ClassifierServiceImpl::drawClassifiedImage(
+    grpc::ServerContext *context, const sc::image::Image *request,
+    sc::image::Image *response) {
+    auto drawed = _network.drawonImage(request->data());
+    {
+        QByteArray imageDataArray;
+        QBuffer buffer(&imageDataArray);
+        buffer.open(QIODevice::WriteOnly);
+        drawed.save(&buffer, "JPG");
+
+        response->set_data(imageDataArray.constData(), imageDataArray.size());
     }
     return grpc::Status::OK;
 }

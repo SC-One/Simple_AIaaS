@@ -4,6 +4,11 @@
 
 DarkNetServer::Server::Server(const QString &ipPort)
     : _service_impl(new ClassifierServiceImpl), _server(nullptr) {
+    /// 1 GB
+    _builder.SetMaxSendMessageSize(1024 * 1024 * 1024);
+    _builder.SetMaxMessageSize(1024 * 1024 * 1024);
+    _builder.SetMaxReceiveMessageSize(1024 * 1024 * 1024);
+
     _builder.AddListeningPort(ipPort.toStdString(),
                               grpc::InsecureServerCredentials());
     _builder.RegisterService(_service_impl.get());

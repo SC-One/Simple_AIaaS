@@ -30,6 +30,7 @@ class DarknetWrapper {
     // TODO: we should make this automatic , but for now ,we should copt these
     // files to binary dir(In docker or cmake)
     DarknetWrapper(
+        const std::string &datacfg = app_dir + "/coco.data",
         const std::string &cfgFile = app_dir +
                                      "/yolov3.cfg",  // /cfg/yolov3.cfg
         const std::string &weightsFile =
@@ -40,11 +41,24 @@ class DarknetWrapper {
 
     std::vector<SimpleDetectionInfo> detect(ImageInfo info,
                                             const std::string &imageData);
+    QImage drawonImage(const std::string &imageData);
 
    private:
-    image makeImageFromRawData(ImageInfo info, const char *&imageData);
-
     image makeImageFromRawData(ImageInfo info, const std::string &imageData);
+
+    // helpers
+    std::vector<DarknetWrapper::SimpleDetectionInfo> cpp_run_detector(
+        ImageInfo info, const std::string &imageData);
+    std::vector<DarknetWrapper::SimpleDetectionInfo> test_detector(
+        char *datacfg, char *cfgfile, char *weightfile, image im, float thresh,
+        float hier_thresh, int fullscreen);
+
+    std::vector<DarknetWrapper::SimpleDetectionInfo> extr_detections(
+        image im, detection *dets, int num, float thresh, char **names,
+        image **alphabet, int classes);
+
+    // this is not good solution , just bypassing deadline of demo
+    void lastTrick() {}
 
    private:
     network *net;

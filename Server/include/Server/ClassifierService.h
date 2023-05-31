@@ -13,6 +13,9 @@ class ClassifierServiceImpl final
     grpc::Status classifyshot(grpc::ServerContext* context,
                               const sc::image::Image* request,
                               sc::image::Detections* response) override;
+    grpc::Status drawClassifiedImage(grpc::ServerContext* context,
+                                     const ::sc::image::Image* request,
+                                     sc::image::Image* response) override;
 
    private:
     DarknetWrapper _network;

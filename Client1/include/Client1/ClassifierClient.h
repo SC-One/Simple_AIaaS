@@ -26,11 +26,10 @@ class ClassifierClient : public QObject {
     Q_OBJECT
     class AsyncClientCall {
        public:
-        sc::image::Detections detections;
+        sc::image::Image drawed;
         Status status;
         ClientContext context;
-        std::unique_ptr<
-            grpc::ClientAsyncResponseReader<::sc::image::Detections>>
+        std::unique_ptr<grpc::ClientAsyncResponseReader<::sc::image::Image>>
             response_reader;
     };
 
@@ -47,12 +46,15 @@ class ClassifierClient : public QObject {
    signals:
     void newImageRecieved(QImage image, BoundingBox box);
 
+    void newDrawedImageReceived(QImage image);
+
    private:
     std::unique_ptr<ClassifierService::Stub> stub_;
     CompletionQueue cq_;
     std::thread _t1;
 
     QImage _tmp;
+    std::atomic_bool _shuttingDown = false;
 };
 
 #endif  // CLASSIFIERCLIENT_H

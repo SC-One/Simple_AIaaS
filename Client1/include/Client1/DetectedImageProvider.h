@@ -14,8 +14,11 @@ class DetectedImageProvider final : public QQuickImageProvider {
     QStandardItemModel *model() const;
     void setModel(QStandardItemModel *newModel);
 
-private:
+    void setNewImage(int i, QImage const &image);
+
+   private:
     QStandardItemModel *_model;
+    QMap<int, QImage> _images;
 };
 
 #endif  // DETECTEDIMAGEPROVIDER_H
