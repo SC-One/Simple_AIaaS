@@ -4,6 +4,9 @@ Simple Example of Artificial Intelligence as a Service (Uni Presentation)
 
 ### Demo
 Demo is without camera , get latest commit and you can have camera too(in client application).
+  - C++/Qt
+  - Darknet (Yolo v3)
+  - gRPC
 
 ![Demo](https://github.com/SC-One/Simple_AIaaS/blob/master/Cpp_based_demo_without_camera.gif)
 
